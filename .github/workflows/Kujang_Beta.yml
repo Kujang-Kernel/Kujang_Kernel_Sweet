@@ -95,7 +95,7 @@ jobs:
 
       - name: 📂 Prepare AnyKernel3
         run: |
-          git clone --depth=1 -b strix https://github.com/manipvlator/Anykernel3.git AnyKernel3
+          git clone --depth=1 -b Kujang-Kernel https://github.com/Kujang-Kernel/Anykernel3.git AnyKernel3
           cp out/arch/arm64/boot/{Image.gz,dtbo.img,dtb.img} AnyKernel3/
           cp "$RUNNER_TEMP/dtbo-90hz.img" AnyKernel3/dtbo-90hz.img
           (cd AnyKernel3 && zip -r "../Kujang-Beta_${{ matrix.build_type }}-${{ github.ref_name }}-${BUILD_TIME}.zip" . -x ".git/*")
