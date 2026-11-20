@@ -26,7 +26,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 📢 Notify: mulai
+      - name: "📢 Notify - mulai"
         run: bash scripts/tg-notify.sh start
 
       - name: ⏰ Prepare Environment
@@ -49,7 +49,7 @@ jobs:
           echo "GCC64_PATH=$GITHUB_WORKSPACE/gcc64" >> "$GITHUB_ENV"
           echo "GCC32_PATH=$GITHUB_WORKSPACE/gcc32" >> "$GITHUB_ENV"
 
-      - name: 📢 Notify: toolchain siap
+      - name: "📢 Notify - toolchain siap"
         run: bash scripts/tg-notify.sh toolchain
 
       - name: 🥷 Setup NoMount
@@ -77,7 +77,7 @@ jobs:
 
           cp out/.config out/sweet_defconfig.txt
 
-      - name: 📢 Notify: kernel selesai
+      - name: "📢 Notify - kernel selesai"
         run: bash scripts/tg-notify.sh kernel
 
       - name: 💾 Upload Config
@@ -110,7 +110,7 @@ jobs:
           cp "$RUNNER_TEMP/dtbo-stock.img" out/arch/arm64/boot/dtbo.img
           git apply -R arch/arm64/boot/dts/qcom/90hz-dtbo.patch
 
-      - name: 📢 Notify: DTBO selesai
+      - name: "📢 Notify - DTBO selesai"
         run: bash scripts/tg-notify.sh dtbo
 
       - name: 📂 Prepare AnyKernel3
@@ -126,10 +126,10 @@ jobs:
           name: Kujang-Beta_${{ matrix.build_type }}-${{ github.ref_name }}-${{ env.BUILD_TIME }}
           path: Kujang-Beta_*.zip
 
-      - name: 📢 Notify: selesai
+      - name: "📢 Notify - selesai"
         run: bash scripts/tg-notify.sh success
 
-      - name: 📢 Notify: gagal
+      - name: "📢 Notify - gagal"
         if: failure()
         run: bash scripts/tg-notify.sh fail
 
