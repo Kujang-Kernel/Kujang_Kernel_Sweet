@@ -31,7 +31,7 @@ jobs:
       - name: 📦 Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y bc cpio flex bison git aria2 lz4 libssl-dev libxml2 perl wget curl zip unzip
+          sudo apt-get install -y bc cpio flex bison git aria2 lz4 libssl-dev perl wget curl zip unzip
 
       - name: ⚙️ Setup Clang 17 + GCC
         run: |
