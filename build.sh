@@ -15,7 +15,7 @@ IMG_DIR="$KERNEL_DIR"/out/arch/arm64/boot
 DEFCONFIG=vendor/sweet_defconfig
 
 # Set common environment
-export KBUILD_BUILD_USER="FiqriArdyansyah"
+export KBUILD_BUILD_USER="Kujang"
 
 #
 # Set if do you use GCC or clang compiler
@@ -135,7 +135,7 @@ cfg_changes() {
 # Set function for cloning repository
 clone() {
 	# Clone AnyKernel3
-	git clone --depth=1 https://github.com/fiqri19102002/AnyKernel3.git -b sweet
+	git clone --depth=1 https://github.com/Kujang-Kernel/Anykernel3.git -b Kujang-Kernel
 
 	if [ $COMPILER == "clang" ]; then
 		# Clone Proton clang
@@ -163,10 +163,10 @@ clone() {
 # Set function for naming zip file
 set_naming() {
 	if [ -d "$KERNEL_DIR"/KernelSU ]; then
-		KERNEL_NAME="STRIX-sweet-ksu-personal-$ZIP_DATE"
+		KERNEL_NAME="Kujang-Beta-sweet-ksu-$ZIP_DATE"
 		export ZIP_NAME="$KERNEL_NAME.zip"
 	else
-		KERNEL_NAME="STRIX-sweet-personal-$ZIP_DATE"
+		KERNEL_NAME="Kujang-Beta-sweet-$ZIP_DATE"
 		export ZIP_NAME="$KERNEL_NAME.zip"
 	fi
 }
