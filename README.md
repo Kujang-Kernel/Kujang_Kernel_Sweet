@@ -1,30 +1,47 @@
-# ⚡ StriXotic Kernel
+# ⚡ Kujang Kernel
 
-**StriXotic** is more than a kernel — it is the rebirth of a legacy and the ignition of a new ideology.  
-Originally inspired by the iconic **Strix**, and reborn through the relentless refinement of **Tobrut Exotic**, StriXotic represents a new generation of kernel design: one that is bold, intentional, and obsessively clean.
+Custom kernel for **Redmi Note 10 Pro** (`sweet` / `sweetin`) — Snapdragon 732G (SM7150), Android 11–17.
 
-This project was rebuilt from the ground up, based on the Linux 4.14.356 upstream, with zero unnecessary baggage. Every line of code in StriXotic is earned, not inherited. Every decision reflects a belief:  
-> *Performance should not come at the cost of sanity.  
-> Efficiency should not mean compromise.  
-> And custom kernels should serve the user, not confuse them.*
+**Kujang Kernel** is based on **Strixotic-personal**, built on the Linux 4.14 tree. It keeps the clean and minimal philosophy of its base, with Kujang branding, a dedicated build pipeline, and device-specific tweaks.
 
-StriXotic stands at the intersection of minimalism and control. It's a kernel that knows what it wants to be —  
-- Ultra-responsive but thermally aware  
-- Battery-friendly but never sluggish  
-- Clean, lean, and ready for experimentation  
+> **Base:** Strixotic-personal · **Kernel:** `4.14.357-Kujang-Beta` · **Device:** sweet
 
-It was not made to follow trends, but to set a new standard. It throws away what is bloated, redundant, or poorly integrated.  
-Instead, it introduces only what matters — guided by the principles of **Morat Engine**, a philosophy of user-first performance engineering.
+## Highlights
 
-StriXotic isn't for everyone. It is for those who dare to dive deep. For those who flash with purpose.  
-For users who don't just tweak — they *understand*. For builders who don't just compile — they *refine*.  
-For tinkerers, gamers, developers, power users — and for anyone tired of kernels that promise everything and deliver noise.
+- Based on **Strixotic-personal** (Linux 4.14.357)
+- **Kprofiles** — four switchable profiles through `/sys/kernel/kprofiles/kp_mode`:
 
-This is not a port. Not a fork. Not a repackaging.  
-This is **StriXotic** — redefined, rebalanced, and razor-sharp in its identity.
+  | Mode | Profile |
+  | ---- | ------- |
+  | 0 | Disabled |
+  | 1 | Battery Saver |
+  | 2 | Balanced |
+  | 3 | Performance |
 
-> 🧠 Powered by Morat Engine  
-> 🛠️ Forged from Tobrut DNA  
-> 🔥 No gimmicks. No bloat. Just intent.
+  Auto profile switching on screen-off can be toggled at runtime via `/sys/module/kprofiles/parameters/auto_kp`.
 
-Join the rebellion. This is not a return. It’s an upgrade.
+- **90 Hz DTBO** selector inside the flashable ZIP (volume keys in recovery)
+- **KernelSU / NoMount** support — CI builds both `KSU-AOSP` and `Non-KSU` variants
+- AnyKernel3 packaging from [Kujang-Kernel/Anykernel3](https://github.com/Kujang-Kernel/Anykernel3) (branch `Kujang-Kernel`)
+- Thermally aware charging and DVFS — mitigation tables are kept intentionally for safety
+
+## Build
+
+GitHub Actions workflow: `.github/workflows/Kujang_Beta.yml` (manual `workflow_dispatch`).
+
+- **Toolchain:** Clang 17.0.0 (ZyCromerZ) + GCC from greenforce-project
+- **Defconfig:** `arch/arm64/configs/vendor/sweet_defconfig`
+- **Output:** `Kujang-Beta_<build_type>-<branch>-<timestamp>.zip`
+
+For local builds, run `./build.sh`.
+
+## Flash
+
+Flash the AnyKernel3 ZIP from recovery. Wipe cache before the first boot after flashing.
+
+## Credits
+
+- **Strixotic-personal** — base kernel
+- **osm0sis** — AnyKernel3
+- **Dakkshesh** — Kprofiles
+- **Qualcomm / Xiaomi / LineageOS** — upstream kernel sources
