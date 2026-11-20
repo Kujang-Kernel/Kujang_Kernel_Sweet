@@ -1,5 +1,8 @@
 # ⚡ Kujang Kernel
 
+[![Telegram](https://img.shields.io/badge/Telegram-Kujang%20Project-2AABEE?logo=telegram&logoColor=white)](https://t.me/kujang_project)
+[![Build](https://github.com/Kujang-Kernel/Kujang_Kernel_Sweet/actions/workflows/Kujang_Beta.yml/badge.svg?branch=Kujang_Beta)](https://github.com/Kujang-Kernel/Kujang_Kernel_Sweet/actions/workflows/Kujang_Beta.yml)
+
 Custom kernel for **Redmi Note 10 Pro** (`sweet` / `sweetin`) — Snapdragon 732G (SM7150), Android 11–17.
 
 **Kujang Kernel** is based on **Strixotic-personal**, built on the Linux 4.14 tree. It keeps the clean and minimal philosophy of its base, with Kujang branding, a dedicated build pipeline, and device-specific tweaks.
@@ -38,6 +41,12 @@ For local builds, run `./build.sh`.
 ## Flash
 
 Flash the AnyKernel3 ZIP from recovery. Wipe cache before the first boot after flashing.
+
+## Community
+
+Join the discussion, ask questions, and get build updates:
+
+- Telegram: [@kujang_project](https://t.me/kujang_project)
 
 ## Credits
 
