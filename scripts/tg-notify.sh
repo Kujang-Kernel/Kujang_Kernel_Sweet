@@ -45,9 +45,17 @@ case "$STAGE" in
     ;;
 esac
 
-curl -sS -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+RESP=$(curl -sS -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
   -d chat_id="$TG_CHAT" \
   -d parse_mode=HTML \
   -d disable_web_page_preview=true \
-  --data-urlencode "text=$TEXT" \
-  >/dev/null 2>&1 || true
+  --data-urlencode "text=$TEXT" 2>&1)
+
+case "$RESP" in
+  *'"ok":true'*)
+    echo "Telegram notified: $STAGE ($BUILD_TYPE)"
+    ;;
+  *)
+    echo "::warning::Telegram notify failed ($STAGE): $RESP"
+    ;;
+esac
