@@ -120,5 +120,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: Kujang-Beta-NonBMS_${{ matrix.build_type }}-${{ github.ref_name }}-${{ env.BUILD_TIME }}
-          path: Kujang-Beta_*.zip
+          path: Kujang-Beta-NonBMS_*.zip
           if-no-files-found: error
