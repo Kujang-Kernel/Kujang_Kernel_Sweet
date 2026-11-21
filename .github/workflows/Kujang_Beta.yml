@@ -106,7 +106,7 @@ jobs:
 
       - name: 📂 Prepare AnyKernel3
         run: |
-          git clone --depth=1 -b strix https://github.com/manipvlator/Anykernel3.git AnyKernel3
+          git clone --depth=1 -b Kujang-Kernel https://github.com/Kujang-Kernel/Anykernel3.git AnyKernel3
 
           cp out/arch/arm64/boot/Image.gz AnyKernel3/
           cp out/arch/arm64/boot/dtbo.img AnyKernel3/
