@@ -1064,7 +1064,7 @@ static int cpufreq_add_dev_interface(struct cpufreq_policy *policy)
 	return 0;
 }
 
-static struct cpufreq_governor *cpufreq_default_governor(void)
+struct cpufreq_governor *cpufreq_default_governor(void)
 {
 	/* Kujang-gaming: force vorpal as the boot governor. */
 	struct cpufreq_governor *gov = find_governor("vorpal");
