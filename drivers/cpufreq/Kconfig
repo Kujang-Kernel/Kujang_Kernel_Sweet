@@ -113,7 +113,8 @@ config CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
 
 config CPU_FREQ_DEFAULT_GOV_VORPAL
 	bool "vorpal (gaming)"
-	depends on SMP && CPU_FREQ_GOV_SCHEDUTIL
+	depends on SMP
+	select CPU_FREQ_GOV_SCHEDUTIL
 	select CPU_FREQ_GOV_VORPAL
 	select CPU_FREQ_GOV_PERFORMANCE
 	help
