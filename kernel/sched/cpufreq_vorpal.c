@@ -193,7 +193,7 @@
 /* ===================================================================== */
 
 /* Master gaming switch, written by gaming_mode sysfs (Prime cluster only). */
-static atomic_t rfx_gaming = ATOMIC_INIT(0);
+static atomic_t rfx_gaming = ATOMIC_INIT(1);
 
 static inline bool rfx_gaming_enabled(void)
 {
