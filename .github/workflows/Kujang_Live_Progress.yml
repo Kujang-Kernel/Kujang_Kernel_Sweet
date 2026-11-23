@@ -1,4 +1,4 @@
-name: Kujang Live Progress
+name: Kujang Live Progress (Thermal Test)
 
 'on':
   workflow_dispatch:
@@ -26,7 +26,7 @@ jobs:
           NEVER_DIE_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           BUILD_TIME: ${{ steps.time.outputs.build_time }}
         run: |
-          TEXT="⚡ <b>KUJANG-BETA · LIVE BUILD</b>
+          TEXT="⚡ <b>KUJANG THERMAL TEST · LIVE BUILD</b>
           ━━━━━━━━━━━━━━━━━━━━━━━━━━
           🟦 <b>KSU-AOSP</b>
           　└ ⏳ Menunggu
@@ -143,7 +143,7 @@ jobs:
             NC="$(jq -r '.conclusion // empty' <<< "$NON")"
 
             if [ "$KC" = success ] && [ "$NC" = success ]; then
-              TEXT="⚡ <b>KUJANG-BETA · LIVE BUILD</b>
+              TEXT="⚡ <b>KUJANG THERMAL TEST · LIVE BUILD</b>
           ━━━━━━━━━━━━━━━━━━━━━━━━━━
           🟦 <b>KSU-AOSP</b>
           　└ ✅ Selesai
@@ -158,7 +158,7 @@ jobs:
 
             if [ -n "$KC" ] && [ -n "$NC" ] &&
                [[ "$KC" =~ ^(failure|cancelled|timed_out)$ || "$NC" =~ ^(failure|cancelled|timed_out)$ ]]; then
-              TEXT="⚡ <b>KUJANG-BETA · LIVE BUILD</b>
+              TEXT="⚡ <b>KUJANG THERMAL TEST · LIVE BUILD</b>
           ━━━━━━━━━━━━━━━━━━━━━━━━━━
           🟦 <b>KSU-AOSP</b>
           　└ ${KSUS}
@@ -171,7 +171,7 @@ jobs:
               exit 0
             fi
 
-            TEXT="⚡ <b>KUJANG-BETA · LIVE BUILD</b>
+            TEXT="⚡ <b>KUJANG THERMAL TEST · LIVE BUILD</b>
           ━━━━━━━━━━━━━━━━━━━━━━━━━━
           🟦 <b>KSU-AOSP</b>
           　└ ${KSUS}
@@ -251,7 +251,7 @@ jobs:
       - name: 💾 Upload Config
         uses: actions/upload-artifact@v7
         with:
-          name: Kujang-Beta-Config-${{ matrix.build_type }}-${{ env.BUILD_TIME }}
+          name: Kujang-Thermal-Config-${{ matrix.build_type }}-${{ env.BUILD_TIME }}
           path: out/sweet_defconfig.txt
 
       - name: 📦 Build 90Hz DTBO
@@ -294,13 +294,13 @@ jobs:
 
           cp "$RUNNER_TEMP/dtbo-90hz.img" AnyKernel3/dtbo-90hz.img
 
-          (cd AnyKernel3 && zip -r "../Kujang-Beta_${{ matrix.build_type }}-${{ github.ref_name }}-${BUILD_TIME}.zip" . -x ".git/*")
+          (cd AnyKernel3 && zip -r "../Kujang-Thermal_${{ matrix.build_type }}-${{ github.ref_name }}-${BUILD_TIME}.zip" . -x ".git/*")
 
       - name: 📤 Upload Flashable ZIP
         uses: actions/upload-artifact@v7
         with:
-          name: Kujang-Beta_${{ matrix.build_type }}-${{ github.ref_name }}-${{ env.BUILD_TIME }}
-          path: Kujang-Beta_*.zip
+          name: Kujang-Thermal_${{ matrix.build_type }}-${{ github.ref_name }}-${{ env.BUILD_TIME }}
+          path: Kujang-Thermal_*.zip
           if-no-files-found: error
   final:
     name: Final
@@ -310,7 +310,7 @@ jobs:
     steps:
       - name: 📊 Final Status
         run: |
-          echo "KUJANG-BETA FINAL STATUS"
+          echo "KUJANG THERMAL TEST FINAL STATUS"
           echo "Tracker       : ${{ needs.tracker.result }}"
           echo "Reforging     : ${{ needs.Reforging.result }}"
           echo "Telegram Live : ${{ needs.telegram-live.result }}"
