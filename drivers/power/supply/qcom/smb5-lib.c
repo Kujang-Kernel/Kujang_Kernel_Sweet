@@ -2536,7 +2536,19 @@ int smblib_get_prop_batt_status(struct smb_charger *chg,
 	}
 
 	if (is_charging_paused(chg)) {
-		val->intval = POWER_SUPPLY_STATUS_CHARGING;
+		/*
+		 * Kujang: when charging is paused because the ROM charge-limit
+		 * (80/85/90/95%) has been reached, report FULL so the UI stops
+		 * showing the charging bolt. Keep CHARGING for thermal (JEITA)
+		 * pauses so hot/cold battery handling is unchanged.
+		 */
+		if (batt_capa.intval >= 80 &&
+		    pval.intval != POWER_SUPPLY_HEALTH_WARM &&
+		    pval.intval != POWER_SUPPLY_HEALTH_OVERHEAT &&
+		    pval.intval != POWER_SUPPLY_HEALTH_COLD)
+			val->intval = POWER_SUPPLY_STATUS_FULL;
+		else
+			val->intval = POWER_SUPPLY_STATUS_CHARGING;
 		return 0;
 	}
 
