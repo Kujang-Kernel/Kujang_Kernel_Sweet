@@ -1440,7 +1440,7 @@ static int pl_disable_vote_callback(struct votable *votable,
 			 * is not present in the system.
 			 * Disable parallel charger forever.
 			 */
-			schedule_work(&chip->pl_disable_forever_work);
+			queue_work(system_power_efficient_wq, &chip->pl_disable_forever_work);
 			return rc;
 		}
 

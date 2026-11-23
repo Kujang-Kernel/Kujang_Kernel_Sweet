@@ -2905,7 +2905,7 @@ out:
 	vote(fg->awake_votable, PROFILE_LOAD, false, 0);
 	if (!work_pending(&fg->status_change_work)) {
 		fg_stay_awake(fg, FG_STATUS_NOTIFY_WAKE);
-		schedule_work(&fg->status_change_work);
+		queue_work(system_power_efficient_wq, &fg->status_change_work);
 	}
 }
 
@@ -3844,7 +3844,7 @@ static int fg_notifier_cb(struct notifier_block *nb,
 		 * a mutex lock and this is executed in an atomic context.
 		 */
 		fg_stay_awake(fg, FG_STATUS_NOTIFY_WAKE);
-		schedule_work(&fg->status_change_work);
+		queue_work(system_power_efficient_wq, &fg->status_change_work);
 	}
 
 	return NOTIFY_OK;
@@ -5387,7 +5387,7 @@ static int fg_gen3_resume(struct device *dev)
 
 	if (!work_pending(&fg->status_change_work)) {
 		pm_stay_awake(fg->dev);
-		schedule_work(&fg->status_change_work);
+		queue_work(system_power_efficient_wq, &fg->status_change_work);
 	}
 
 	spin_lock(&fg->suspend_lock);
