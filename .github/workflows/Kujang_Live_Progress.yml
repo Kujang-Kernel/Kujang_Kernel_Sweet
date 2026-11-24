@@ -1,6 +1,6 @@
 name: Kujang Live Progress (Thermal Test)
 
-'on':
+on:
   workflow_dispatch:
 
 permissions:
