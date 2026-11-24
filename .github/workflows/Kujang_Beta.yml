@@ -1,6 +1,6 @@
 name: Kujang-Beta (Non-BMS)
 
-'on':
+on:
   workflow_dispatch:
 
 jobs:
