@@ -46,6 +46,13 @@ jobs:
           curl -LSs https://raw.githubusercontent.com/maxsteeel/nomount/refs/heads/master/kernel/setup.sh | bash -s master
 
 
+      - name: 🔧 Non-KSU: disable KSU
+        if: matrix.build_type == 'Non-KSU'
+        run: |
+          sed -i 's/^CONFIG_KSU=y$/# CONFIG_KSU is not set/' arch/arm64/configs/vendor/sweet_defconfig
+          sed -i '/^CONFIG_KSU_SUSFS/d' arch/arm64/configs/vendor/sweet_defconfig
+          sed -i '/^CONFIG_KSU_HACK_ARM64_BRANCH_LINK/d' arch/arm64/configs/vendor/sweet_defconfig
+
       - name: 🛠️ Build Kernel
         run: |
           export PATH="$CLANG_PATH/bin:$GCC64_PATH/bin:$GCC32_PATH/bin:$PATH"
