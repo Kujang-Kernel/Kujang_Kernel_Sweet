@@ -1,6 +1,6 @@
 name: Kujang-Beta
 
-'on':
+on:
   workflow_dispatch:
 
 jobs:
