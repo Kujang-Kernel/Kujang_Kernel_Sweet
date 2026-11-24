@@ -1,6 +1,6 @@
 name: Kujang Live Progress (Gaming)
 
-'on':
+on:
   workflow_dispatch:
 
 permissions:
