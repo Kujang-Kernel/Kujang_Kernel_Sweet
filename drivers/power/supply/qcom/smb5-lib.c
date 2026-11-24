@@ -2535,20 +2535,23 @@ int smblib_get_prop_batt_status(struct smb_charger *chg,
 		break;
 	}
 
+	/*
+	 * Kujang: the ROM charge-limit (70-99%) stops charging by writing
+	 * charging_enabled=0, which votes USER_VOTER on chg_disable_votable.
+	 * Report FULL in that case so the UI drops the charging bolt.
+	 * Thermal/JEITA paths use other voters, so they are untouched.
+	 */
+	if (get_client_vote_locked(chg->chg_disable_votable, USER_VOTER) &&
+	    batt_capa.intval >= 70 &&
+	    pval.intval != POWER_SUPPLY_HEALTH_WARM &&
+	    pval.intval != POWER_SUPPLY_HEALTH_OVERHEAT &&
+	    pval.intval != POWER_SUPPLY_HEALTH_COLD) {
+		val->intval = POWER_SUPPLY_STATUS_FULL;
+		return 0;
+	}
+
 	if (is_charging_paused(chg)) {
-		/*
-		 * Kujang: when charging is paused because the ROM charge-limit
-		 * (70-99%) has been reached, report FULL so the UI stops
-		 * showing the charging bolt. Keep CHARGING for thermal (JEITA)
-		 * pauses so hot/cold battery handling is unchanged.
-		 */
-		if (batt_capa.intval >= 70 &&
-		    pval.intval != POWER_SUPPLY_HEALTH_WARM &&
-		    pval.intval != POWER_SUPPLY_HEALTH_OVERHEAT &&
-		    pval.intval != POWER_SUPPLY_HEALTH_COLD)
-			val->intval = POWER_SUPPLY_STATUS_FULL;
-		else
-			val->intval = POWER_SUPPLY_STATUS_CHARGING;
+		val->intval = POWER_SUPPLY_STATUS_CHARGING;
 		return 0;
 	}
 
