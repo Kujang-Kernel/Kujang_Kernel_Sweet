@@ -1,6 +1,6 @@
 name: Kujang Live Progress
 
-'on':
+on:
   workflow_dispatch:
 
 permissions:
