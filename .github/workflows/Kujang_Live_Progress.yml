@@ -1,4 +1,4 @@
-name: Kujang Live Progress (Thermal Test)
+name: Kujang Thermal Live Progress
 
 on:
   workflow_dispatch:
@@ -254,7 +254,7 @@ jobs:
       - name: 💾 Upload Config
         uses: actions/upload-artifact@v7
         with:
-          name: Kujang-Thermal-Config-${{ matrix.build_type }}-${{ env.BUILD_TIME }}
+          name: Kujang-Thermal${{ matrix.build_type }}-${{ env.BUILD_TIME }}
           path: out/sweet_defconfig.txt
 
       - name: 📦 Build 90Hz DTBO
@@ -313,7 +313,7 @@ jobs:
     steps:
       - name: 📊 Final Status
         run: |
-          echo "KUJANG THERMAL TEST FINAL STATUS"
+          echo "KUJANG THERMAL FINAL STATUS"
           echo "Tracker       : ${{ needs.tracker.result }}"
           echo "Reforging     : ${{ needs.Reforging.result }}"
           echo "Telegram Live : ${{ needs.telegram-live.result }}"
