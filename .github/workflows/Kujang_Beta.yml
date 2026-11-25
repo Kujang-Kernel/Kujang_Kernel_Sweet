@@ -1,4 +1,4 @@
-name: Kujang-Beta
+name: Kujang-KP-Gov Test
 
 on:
   workflow_dispatch:
@@ -117,11 +117,11 @@ jobs:
 
           cp "$RUNNER_TEMP/dtbo-90hz.img" AnyKernel3/dtbo-90hz.img
 
-          (cd AnyKernel3 && zip -r "../Kujang-Beta_${{ matrix.build_type }}-${{ github.ref_name }}-${BUILD_TIME}.zip" . -x ".git/*")
+          (cd AnyKernel3 && zip -r "../Kujang-KPGov_${{ matrix.build_type }}-${{ github.ref_name }}-${BUILD_TIME}.zip" . -x ".git/*")
 
       - name: 📤 Upload Flashable ZIP
         uses: actions/upload-artifact@v7
         with:
-          name: Kujang-Beta_${{ matrix.build_type }}-${{ github.ref_name }}-${{ env.BUILD_TIME }}
-          path: Kujang-Beta_*.zip
+          name: Kujang-KPGov_${{ matrix.build_type }}-${{ github.ref_name }}-${{ env.BUILD_TIME }}
+          path: Kujang-KPGov_*.zip
           if-no-files-found: error
