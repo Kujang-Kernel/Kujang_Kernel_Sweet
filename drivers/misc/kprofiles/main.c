@@ -383,15 +383,15 @@ static struct kobj_attribute kp_mode_attribute =
  * takes over the scheduler when it is actually enabled.
  *
  *   0 (Disabled)   -> NULL, leave governor as the ROM set it
- *   1 (Battery)    -> powersave
- *   2 (Balanced)   -> schedutil
+ *   1 (Battery)    -> NULL, ROM keeps its governor
+ *   2 (Balanced)   -> NULL, ROM keeps its governor
  *   3 (Performance)-> vorpal
  */
 #ifdef CONFIG_CPU_FREQ
 static const char *kp_governor_map[] = {
 	[0] = NULL,
-	[1] = "powersave",
-	[2] = "schedutil",
+	[1] = NULL,
+	[2] = NULL,
 	[3] = "vorpal",
 };
 
