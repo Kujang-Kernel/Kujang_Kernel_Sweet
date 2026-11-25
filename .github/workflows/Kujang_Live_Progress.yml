@@ -26,7 +26,7 @@ jobs:
           NEVER_DIE_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           BUILD_TIME: ${{ steps.time.outputs.build_time }}
         run: |
-          TEXT="⚡ <b>KUJANG-BETA NON-BMS · LIVE BUILD</b>
+          TEXT="⚡ <b>KUJANG NON-BMS · LIVE BUILD</b>
           ━━━━━━━━━━━━━━━━━━━━━━━━━━
           🟦 <b>KSU-AOSP</b>
           　└ ⏳ Menunggu
@@ -143,7 +143,7 @@ jobs:
             NC="$(jq -r '.conclusion // empty' <<< "$NON")"
 
             if [ "$KC" = success ] && [ "$NC" = success ]; then
-              TEXT="⚡ <b>KUJANG-BETA NON-BMS · LIVE BUILD</b>
+              TEXT="⚡ <b>KUJANG NON-BMS · LIVE BUILD</b>
           ━━━━━━━━━━━━━━━━━━━━━━━━━━
           🟦 <b>KSU-AOSP</b>
           　└ ✅ Selesai
@@ -158,7 +158,7 @@ jobs:
 
             if [ -n "$KC" ] && [ -n "$NC" ] &&
                [[ "$KC" =~ ^(failure|cancelled|timed_out)$ || "$NC" =~ ^(failure|cancelled|timed_out)$ ]]; then
-              TEXT="⚡ <b>KUJANG-BETA NON-BMS · LIVE BUILD</b>
+              TEXT="⚡ <b>KUJANG NON-BMS · LIVE BUILD</b>
           ━━━━━━━━━━━━━━━━━━━━━━━━━━
           🟦 <b>KSU-AOSP</b>
           　└ ${KSUS}
@@ -171,7 +171,7 @@ jobs:
               exit 0
             fi
 
-            TEXT="⚡ <b>KUJANG-BETA NON-BMS · LIVE BUILD</b>
+            TEXT="⚡ <b>KUJANG NON-BMS · LIVE BUILD</b>
           ━━━━━━━━━━━━━━━━━━━━━━━━━━
           🟦 <b>KSU-AOSP</b>
           　└ ${KSUS}
