@@ -238,7 +238,7 @@ jobs:
           export PATH="$CLANG_PATH/bin:$GCC64_PATH/bin:$GCC32_PATH/bin:$PATH"
 
           export KBUILD_BUILD_USER=Kujang
-          export KBUILD_BUILD_HOST=Beta
+          export KBUILD_BUILD_HOST=Kujang-X
           export KBUILD_COMPILER_STRING="$CLANG_PATH/bin/clang"
           export CFLAGS_EXTRA="-DBUILD_DATE=$BUILD_DATE"
 
@@ -271,7 +271,7 @@ jobs:
           export PATH="$CLANG_PATH/bin:$GCC64_PATH/bin:$GCC32_PATH/bin:$PATH"
 
           export KBUILD_BUILD_USER=Kujang
-          export KBUILD_BUILD_HOST=Beta
+          export KBUILD_BUILD_HOST=Kujang-X
           export KBUILD_COMPILER_STRING="$CLANG_PATH/bin/clang"
           export CFLAGS_EXTRA="-DBUILD_DATE=$BUILD_DATE"
 
