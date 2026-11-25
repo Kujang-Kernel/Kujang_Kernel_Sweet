@@ -15,7 +15,7 @@ IMG_DIR="$KERNEL_DIR"/out/arch/arm64/boot
 DEFCONFIG=vendor/sweet_defconfig
 
 # Set common environment
-export KBUILD_BUILD_USER="Kujang"
+export KBUILD_BUILD_USER="Kujang Project"
 
 #
 # Set if do you use GCC or clang compiler
