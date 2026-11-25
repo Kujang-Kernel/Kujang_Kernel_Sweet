@@ -1,4 +1,4 @@
-name: Kujang Live Progress (Non-BMS)
+name: Kujang Non-BMS Live Progress
 
 on:
   workflow_dispatch:
@@ -254,7 +254,7 @@ jobs:
       - name: 💾 Upload Config
         uses: actions/upload-artifact@v7
         with:
-          name: Kujang-Beta-NonBMS-Config-${{ matrix.build_type }}-${{ env.BUILD_TIME }}
+          name: Kujang-NonBMS${{ matrix.build_type }}-${{ env.BUILD_TIME }}
           path: out/sweet_defconfig.txt
 
       - name: 📦 Build 90Hz DTBO
@@ -297,13 +297,13 @@ jobs:
 
           cp "$RUNNER_TEMP/dtbo-90hz.img" AnyKernel3/dtbo-90hz.img
 
-          (cd AnyKernel3 && zip -r "../Kujang-Beta-NonBMS_${{ matrix.build_type }}-${{ github.ref_name }}-${BUILD_TIME}.zip" . -x ".git/*")
+          (cd AnyKernel3 && zip -r "../Kujang-NonBMS_${{ matrix.build_type }}-${{ github.ref_name }}-${BUILD_TIME}.zip" . -x ".git/*")
 
       - name: 📤 Upload Flashable ZIP
         uses: actions/upload-artifact@v7
         with:
-          name: Kujang-Beta-NonBMS_${{ matrix.build_type }}-${{ github.ref_name }}-${{ env.BUILD_TIME }}
-          path: Kujang-Beta-NonBMS_*.zip
+          name: Kujang-NonBMS_${{ matrix.build_type }}-${{ github.ref_name }}-${{ env.BUILD_TIME }}
+          path: Kujang-NonBMS_*.zip
           if-no-files-found: error
   final:
     name: Final
@@ -313,7 +313,7 @@ jobs:
     steps:
       - name: 📊 Final Status
         run: |
-          echo "KUJANG-BETA NON-BMS FINAL STATUS"
+          echo "KUJANG NON-BMS FINAL STATUS"
           echo "Tracker       : ${{ needs.tracker.result }}"
           echo "Reforging     : ${{ needs.Reforging.result }}"
           echo "Telegram Live : ${{ needs.telegram-live.result }}"
