@@ -1,4 +1,4 @@
-name: Kujang Live Progress (Gaming)
+name: Kujang Gaming Live Progress
 
 on:
   workflow_dispatch:
@@ -254,7 +254,7 @@ jobs:
       - name: 💾 Upload Config
         uses: actions/upload-artifact@v7
         with:
-          name: Kujang-Gaming-Config-${{ matrix.build_type }}-${{ env.BUILD_TIME }}
+          name: Kujang-Gaming${{ matrix.build_type }}-${{ env.BUILD_TIME }}
           path: out/sweet_defconfig.txt
 
       - name: 📦 Build 90Hz DTBO
