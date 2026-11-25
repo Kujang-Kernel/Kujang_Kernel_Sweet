@@ -1,7 +1,7 @@
 # ⚡ Kujang Kernel
 
 [![Telegram](https://img.shields.io/badge/Telegram-Kujang%20Project-2AABEE?logo=telegram&logoColor=white)](https://t.me/kujang_project)
-[![Build](https://github.com/Kujang-Kernel/Kujang-Project/actions/workflows/Kujang_Beta.yml/badge.svg?branch=Kujang_Beta)](https://github.com/Kujang-Kernel/Kujang-Project/actions/workflows/Kujang_Beta.yml)
+[![Build](https://github.com/Kujang-Kernel/Kujang_Kernel_Sweet/actions/workflows/Kujang_Beta.yml/badge.svg?branch=Kujang_Beta)](https://github.com/Kujang-Kernel/Kujang_Kernel_Sweet/actions/workflows/Kujang_Beta.yml)
 
 Custom kernel for **Redmi Note 10 Pro** (`sweet` / `sweetin`) — Snapdragon 732G (SM7150), Android 11–17.
 
