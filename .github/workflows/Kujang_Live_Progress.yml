@@ -1,5 +1,4 @@
 name: Kujang X Live Progress
- 
 
 on:
   workflow_dispatch:
