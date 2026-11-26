@@ -12,42 +12,57 @@ MDIR := $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 $(info -- KDIR: $(KDIR))
 $(info -- MDIR: $(MDIR))
 
-# compliant to last upstream kernel change as of f49be69
-KSU_VERSION := 32731
+# compliant to last upstream kernel change as of eeb3bbf83
+# Base version = KernelSU official. Downstream versions are derived from it
+# with an offset, so bumping KSU_VERSION moves every manager together.
+# Change an individual *_OFFSET only if one fork needs a different bump.
+KSU_VERSION := 32741
 KSU_VERSION_TAG := v3.3.1
 KSU_VERSION_FULL := $(KSU_VERSION_TAG)-$(KSU_VERSION)
 
-KSU_KSUN_OFFSET := 823
-KSU_BKSU_OFFSET := 2531
-KSU_FINASU_OFFSET := 480
+KSU_KSUN_OFFSET := 670
+KSU_BKSU_OFFSET := 2575
+KSU_KAZESU_OFFSET := 2410
+KSU_FINASU_OFFSET := 550
+KSU_SUKISU_OFFSET := 2350
 
-# KernelSU-Next (rifsxd/KernelSU-Next v3.4.2)
+# KernelSU-Next
 KSU_KSUN_VERSION := $(shell echo $$(($(KSU_VERSION) + $(KSU_KSUN_OFFSET))))
 KSU_KSUN_TAG := v3.4.2
 KSU_KSUN_VERSION_FULL := $(KSU_KSUN_TAG)-$(KSU_KSUN_VERSION)
 
-# BakaSU / ReSukiSU (Baka-SU/BakaSU v4.2.0-rc3)
+# BakaSU
 KSU_BKSU_VERSION := $(shell echo $$(($(KSU_VERSION) + $(KSU_BKSU_OFFSET))))
 KSU_BKSU_TAG := v4.2.0
-KSU_BKSU_VERSION_FULL := $(KSU_BKSU_TAG)-$(KSU_BKSU_VERSION)@BakaSU
+KSU_BKSU_VERSION_FULL := $(KSU_BKSU_TAG)-$(KSU_BKSU_VERSION)-backslashxx
 
-# FinaSU (LyraVoid/FinaSU v1.6.4)
+# KAZESU
+KSU_KAZESU_VERSION := $(shell echo $$(($(KSU_VERSION) + $(KSU_KAZESU_OFFSET))))
+KSU_KAZESU_TAG := v1.0.1
+KSU_KAZESU_VERSION_FULL := $(KSU_KAZESU_TAG)-$(KSU_KAZESU_VERSION)
+
+# FinaSU
 KSU_FINASU_VERSION := $(shell echo $$(($(KSU_VERSION) + $(KSU_FINASU_OFFSET))))
-KSU_FINASU_TAG := v1.6.4
+KSU_FINASU_TAG := v1.7.0
 KSU_FINASU_VERSION_FULL := $(KSU_FINASU_TAG)-$(KSU_FINASU_VERSION)
 
-CFLAGS_ksu.o += -DKSU_VERSION=$(KSU_VERSION) \
-    -DKSU_VERSION_TAG=\"$(KSU_VERSION_TAG)\" \
-    -DKSU_VERSION_FULL=\"$(KSU_VERSION_FULL)\" \
-    -DKSU_KSUN_VERSION=$(KSU_KSUN_VERSION) \
-    -DKSU_KSUN_TAG=\"$(KSU_KSUN_TAG)\" \
-    -DKSU_KSUN_VERSION_FULL=\"$(KSU_KSUN_VERSION_FULL)\" \
-    -DKSU_BKSU_VERSION=$(KSU_BKSU_VERSION) \
-    -DKSU_BKSU_TAG=\"$(KSU_BKSU_TAG)\" \
-    -DKSU_BKSU_VERSION_FULL=\"$(KSU_BKSU_VERSION_FULL)\" \
-    -DKSU_FINASU_VERSION=$(KSU_FINASU_VERSION) \
-    -DKSU_FINASU_TAG=\"$(KSU_FINASU_TAG)\" \
-    -DKSU_FINASU_VERSION_FULL=\"$(KSU_FINASU_VERSION_FULL)\"
+# SukiSU
+KSU_SUKISU_VERSION := $(shell echo $$(($(KSU_VERSION) + $(KSU_SUKISU_OFFSET))))
+KSU_SUKISU_TAG := v3.0.0
+KSU_SUKISU_VERSION_FULL := $(KSU_SUKISU_TAG)-$(KSU_SUKISU_VERSION)
+
+ccflags-y += -DKSU_VERSION=$(KSU_VERSION) -DKSU_VERSION_TAG=\"$(KSU_VERSION_TAG)\" \
+                -DKSU_VERSION_FULL=\"$(KSU_VERSION_FULL)\" \
+                -DKSU_KSUN_VERSION=$(KSU_KSUN_VERSION) -DKSU_KSUN_TAG=\"$(KSU_KSUN_TAG)\" \
+                -DKSU_KSUN_VERSION_FULL=\"$(KSU_KSUN_VERSION_FULL)\" \
+                -DKSU_BKSU_VERSION=$(KSU_BKSU_VERSION) -DKSU_BKSU_TAG=\"$(KSU_BKSU_TAG)\" \
+                -DKSU_BKSU_VERSION_FULL=\"$(KSU_BKSU_VERSION_FULL)\" \
+                -DKSU_KAZESU_VERSION=$(KSU_KAZESU_VERSION) -DKSU_KAZESU_TAG=\"$(KSU_KAZESU_TAG)\" \
+                -DKSU_KAZESU_VERSION_FULL=\"$(KSU_KAZESU_VERSION_FULL)\" \
+                -DKSU_FINASU_VERSION=$(KSU_FINASU_VERSION) -DKSU_FINASU_TAG=\"$(KSU_FINASU_TAG)\" \
+                -DKSU_FINASU_VERSION_FULL=\"$(KSU_FINASU_VERSION_FULL)\" \
+                -DKSU_SUKISU_VERSION=$(KSU_SUKISU_VERSION) -DKSU_SUKISU_TAG=\"$(KSU_SUKISU_TAG)\" \
+                -DKSU_SUKISU_VERSION_FULL=\"$(KSU_SUKISU_VERSION_FULL)\"
 
 $(info -- KernelSU tag: $(KSU_VERSION_TAG))
 $(info -- KernelSU version: $(KSU_VERSION))
@@ -57,15 +72,19 @@ $(info -- KernelSU-Next version: $(KSU_KSUN_VERSION))
 $(info -- KernelSU-Next full version: $(KSU_KSUN_VERSION_FULL))
 $(info -- BakaSU tag: $(KSU_BKSU_TAG))
 $(info -- BakaSU version: $(KSU_BKSU_VERSION))
+$(info -- KAZESU tag: $(KSU_KAZESU_TAG))
+$(info -- KAZESU version: $(KSU_KAZESU_VERSION))
 $(info -- FinaSU tag: $(KSU_FINASU_TAG))
 $(info -- FinaSU version: $(KSU_FINASU_VERSION))
+$(info -- SukiSU tag: $(KSU_SUKISU_TAG))
+$(info -- SukiSU version: $(KSU_SUKISU_VERSION))
 
 ifeq ($(CONFIG_KSU_KPROBES_KSUD),y)
 KSU_HOOK_TYPE := Kprobes
 else ifeq ($(CONFIG_KSU_TAMPER_SYSCALL_TABLE),y)
-KSU_HOOK_TYPE := Net.Reaper
+KSU_HOOK_TYPE := Manipulated
 else ifeq ($(CONFIG_KSU_HACK_ARM64_BRANCH_LINK),y)
-KSU_HOOK_TYPE := Net.Reaper
+KSU_HOOK_TYPE := Manipulated
 else
 KSU_HOOK_TYPE := Manual
 endif
@@ -140,6 +159,8 @@ CFLAGS_ksu.o += $(call cc-option, -Wno-macro-redefined)
 CFLAGS_ksu.o += $(call cc-option, -Wno-incompatible-pointer-types-discards-qualifiers)
 CFLAGS_ksu.o += $(call cc-option, -Wno-discarded-qualifiers)
 CFLAGS_ksu.o += $(call cc-option, -Wno-deprecated-octal-literals)
+CFLAGS_ksu.o += $(call cc-option, -Wno-constant-logical-operand)
+CFLAGS_ksu.o += $(call cc-option, -Wno-alloca)
 
 # dont be too strict
 CFLAGS_REMOVE_ksu.o += -Werror

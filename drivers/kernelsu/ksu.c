@@ -135,6 +135,9 @@
 
 #include "feature/adb_root.c"
 #include "feature/kernel_umount.c"
+#if defined(CONFIG_ARM64) && defined(CONFIG_KALLSYMS)
+#include "feature/selinux_hide_arm64.c"
+#endif
 #include "feature/selinux_hide.c"
 #include "feature/shell_su_adb_only.c"
 #include "feature/sucompat.c"
@@ -277,7 +280,7 @@ static int __init kernelsu_init(void)
 	ksu_throne_tracker_init();
 
 #ifdef CONFIG_KSU_SUSFS
-	susfs_init();
+    susfs_init();
 #endif // #ifdef CONFIG_KSU_SUSFS
 
 	ksu_ksud_init();
