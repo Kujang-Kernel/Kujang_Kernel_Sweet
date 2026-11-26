@@ -220,6 +220,14 @@ config KSU_SUSFS_PRIORITY_UID_FILTER
         - Effective on all processes with uid >= 10000.
         - The uids are resolved from the app package names, so they stay valid after reinstalls.
 
+config KSU_NETISOLATE
+	bool "Per-app network isolation"
+	depends on KSU
+	default n
+	help
+	  Block or filter network access for selected uids from kernel space.
+	  Stays off until a manager sets a policy.
+
 endmenu
 
 endmenu
