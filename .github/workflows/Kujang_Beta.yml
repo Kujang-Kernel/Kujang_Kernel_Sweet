@@ -1,4 +1,4 @@
-name: Kujang
+name: Kujang KSU Update
 
 on:
   workflow_dispatch:
@@ -117,7 +117,7 @@ jobs:
 
           cp "$RUNNER_TEMP/dtbo-90hz.img" AnyKernel3/dtbo-90hz.img
 
-          (cd AnyKernel3 && zip -r "../Kujang_${{ matrix.build_type }}-${{ github.ref_name }}-${BUILD_TIME}.zip" . -x ".git/*")
+          (cd AnyKernel3 && zip -r "../Kujang-KSU_${{ matrix.build_type }}-${{ github.ref_name }}-${BUILD_TIME}.zip" . -x ".git/*")
 
       - name: 📤 Upload Flashable ZIP
         uses: actions/upload-artifact@v7
