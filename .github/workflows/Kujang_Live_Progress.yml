@@ -314,7 +314,7 @@ jobs:
     steps:
       - name: 📊 Final Status
         run: |
-          echo "KUJANG FINAL STATUS"
+          echo "KUJANG KSU FINAL STATUS"
           echo "Tracker       : ${{ needs.tracker.result }}"
           echo "Reforging     : ${{ needs.Reforging.result }}"
           echo "Telegram Live : ${{ needs.telegram-live.result }}"
