@@ -122,6 +122,6 @@ jobs:
       - name: 📤 Upload Flashable ZIP
         uses: actions/upload-artifact@v7
         with:
-          name: Kujang_${{ matrix.build_type }}-${{ github.ref_name }}-${{ env.BUILD_TIME }}
-          path: Kujang_*.zip
+          name: Kujang-KSU_${{ matrix.build_type }}-${{ github.ref_name }}-${{ env.BUILD_TIME }}
+          path: Kujang-KSU_*.zip
           if-no-files-found: error
