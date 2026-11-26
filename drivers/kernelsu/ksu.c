@@ -36,6 +36,9 @@
 #include "include/uapi/selinux.h"
 #include "include/uapi/supercall.h"
 #include "include/uapi/sulog.h"
+#ifdef CONFIG_KSU_NETISOLATE
+#include "include/uapi/netisolate.h"
+#endif
 
 // includes
 #include "include/arch.h"
@@ -63,6 +66,9 @@
 #include "feature/shell_su_adb_only.h"
 #include "feature/sucompat.h"
 #include "feature/sulog.h"
+#ifdef CONFIG_KSU_NETISOLATE
+#include "feature/netisolate.h"
+#endif
 #include "preinit/preinit.h"
 #include "runtime/ksud_boot.h"
 #include "runtime/ksud.h"
@@ -135,10 +141,16 @@
 
 #include "feature/adb_root.c"
 #include "feature/kernel_umount.c"
+#if defined(CONFIG_ARM64) && defined(CONFIG_KALLSYMS)
+#include "feature/selinux_hide_arm64.c"
+#endif
 #include "feature/selinux_hide.c"
 #include "feature/shell_su_adb_only.c"
 #include "feature/sucompat.c"
 #include "feature/sulog.c"
+#ifdef CONFIG_KSU_NETISOLATE
+#include "feature/netisolate.c"
+#endif
 #include "runtime/boot_event.c"
 #include "runtime/ksud_integration.c"
 
@@ -277,7 +289,7 @@ static int __init kernelsu_init(void)
 	ksu_throne_tracker_init();
 
 #ifdef CONFIG_KSU_SUSFS
-	susfs_init();
+    susfs_init();
 #endif // #ifdef CONFIG_KSU_SUSFS
 
 	ksu_ksud_init();
@@ -290,6 +302,9 @@ static int __init kernelsu_init(void)
 
 #ifdef CONFIG_KSU_HACK_ARM64_BRANCH_LINK
 	ksu_branch_link_patch_init();
+#endif
+#ifdef CONFIG_KSU_NETISOLATE
+	ksu_netisolate_init();
 #endif
 
 #ifdef KSU_CAN_USE_MODULE_BLACKLIST

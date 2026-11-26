@@ -239,7 +239,7 @@ struct ksu_lookup_symbols_cmd {
 /*version and hook */
 #define KSU_IOCTL_GET_HOOK_MODE _IOC(_IOC_READ, 'K', 98, 0)
 #define KSU_IOCTL_GET_VERSION_TAG _IOC(_IOC_READ, 'K', 99, 0)
-/* BakaSU/OriginSU/KernelSU-Next downstream ABI */
+/* BakaSU/KazeSU/KernelSU-Next downstream ABI */
 #define KSU_IOCTL_GET_FULL_VERSION _IOC(_IOC_READ, 'K', 100, 0)
 #define KSU_IOCTL_HOOK_TYPE _IOC(_IOC_READ, 'K', 101, 0)
 #define KSU_IOCTL_GET_MANAGERS _IOC(_IOC_READ | _IOC_WRITE, 'K', 105, 0)

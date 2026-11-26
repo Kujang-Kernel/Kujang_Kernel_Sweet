@@ -329,9 +329,21 @@ enum ksu_manager_type ksu_detect_manager_apk(char *path)
 	if (check_v2_signature(path, EXPECTED_SIZE, EXPECTED_HASH))
 		return KSU_MANAGER_XXSU;
 
+	// KOWX712/KernelSU
+	if (check_v2_signature(path, 0x375, "484fcba6e6c43b1fb09700633bf2fb4758f13cb0b2f4457b80d075084b26c588"))
+		return KSU_MANAGER_XXSU;
+
+	// midori01/KernelSU
+	if (check_v2_signature(path, 0x0368, "b9ee6759de4794f954883458b722b97ae6527cb7709a051db9a2348c0eea1e42"))
+		return KSU_MANAGER_XXSU;
+
 	// rifsxd/KernelSU-Next
 	if (check_v2_signature(path, 0x3e6, "79e590113c4c4c0c222978e413a5faa801666957b1212a328e46c00c69821bf7"))
 		return KSU_MANAGER_KSUN;
+
+	// RapliVx/KernelSU (MamboSU)
+	if (check_v2_signature(path, 0x384, "a9462b8b98ea1ca7901b0cbdcebfaa35f0aa95e51b01d66e6b6d2c81b97746d8"))
+		return KSU_MANAGER_XXSU;
 
 	// Baka-SU/BakaSU
 	if (check_v2_signature(path, 0x377, "d3469712b6214462764a1d8d3e5cbe1d6819a0b629791b9f4101867821f1df64"))
@@ -340,6 +352,14 @@ enum ksu_manager_type ksu_detect_manager_apk(char *path)
 	// LyraVoid/FinaSU
 	if (check_v2_signature(path, 0x2cc, "2d89b50aaf1db013c2b6738f973f48b62ea21a3a8d7216bfec3521065d448458"))
 		return KSU_MANAGER_FINASU;
+
+	// KazeSU/KazeSU
+	if (check_v2_signature(path, 0x51c, "d91ed440459ff575f9bbdb0b294f8d679b1591a37538aafcf1d0073da5dbe968"))
+		return KSU_MANAGER_KAZESU;
+
+	// SukiSU-Ultra/SukiSU-Nova
+	if (check_v2_signature(path, 0x35c, "947ae944f3de4ed4c21a7e4f7953ecf351bfa2b36239da37a34111ad29993eef"))
+		return KSU_MANAGER_SUKISU;
 
 	return KSU_MANAGER_UNKNOWN;
 }
@@ -367,6 +387,15 @@ enum ksu_manager_type ksu_detect_manager_apk(char *path)
 #ifndef KSU_BKSU_VERSION_FULL
 #define KSU_BKSU_VERSION_FULL KSU_VERSION_FULL
 #endif
+#ifndef KSU_KAZESU_VERSION
+#define KSU_KAZESU_VERSION KSU_VERSION
+#endif
+#ifndef KSU_KAZESU_TAG
+#define KSU_KAZESU_TAG KSU_VERSION_TAG
+#endif
+#ifndef KSU_KAZESU_VERSION_FULL
+#define KSU_KAZESU_VERSION_FULL KSU_VERSION_FULL
+#endif
 #ifndef KSU_FINASU_VERSION
 #define KSU_FINASU_VERSION KSU_VERSION
 #endif
@@ -376,10 +405,24 @@ enum ksu_manager_type ksu_detect_manager_apk(char *path)
 #ifndef KSU_FINASU_VERSION_FULL
 #define KSU_FINASU_VERSION_FULL KSU_VERSION_FULL
 #endif
+#ifndef KSU_SUKISU_VERSION
+#define KSU_SUKISU_VERSION KSU_VERSION
+#endif
+#ifndef KSU_SUKISU_TAG
+#define KSU_SUKISU_TAG KSU_VERSION_TAG
+#endif
+#ifndef KSU_SUKISU_VERSION_FULL
+#define KSU_SUKISU_VERSION_FULL KSU_VERSION_FULL
+#endif
 
 void ksu_set_manager_type(enum ksu_manager_type type)
 {
 	WRITE_ONCE(detected_manager, type);
+}
+
+enum ksu_manager_type ksu_get_manager_type(void)
+{
+	return READ_ONCE(detected_manager);
 }
 
 u32 ksu_get_manager_version(void)
@@ -389,8 +432,12 @@ u32 ksu_get_manager_version(void)
 		return KSU_KSUN_VERSION;
 	case KSU_MANAGER_BKSU:
 		return KSU_BKSU_VERSION;
+	case KSU_MANAGER_KAZESU:
+		return KSU_KAZESU_VERSION;
 	case KSU_MANAGER_FINASU:
 		return KSU_FINASU_VERSION;
+	case KSU_MANAGER_SUKISU:
+		return KSU_SUKISU_VERSION;
 	case KSU_MANAGER_XXSU:
 	default:
 		return KERNEL_SU_VERSION;
@@ -404,8 +451,12 @@ const char *ksu_get_manager_version_tag(void)
 		return KSU_KSUN_TAG;
 	case KSU_MANAGER_BKSU:
 		return KSU_BKSU_TAG;
+	case KSU_MANAGER_KAZESU:
+		return KSU_KAZESU_TAG;
 	case KSU_MANAGER_FINASU:
 		return KSU_FINASU_TAG;
+	case KSU_MANAGER_SUKISU:
+		return KSU_SUKISU_TAG;
 	case KSU_MANAGER_XXSU:
 	default:
 		return KERNEL_SU_VERSION_TAG;
@@ -419,8 +470,12 @@ const char *ksu_get_manager_version_full(void)
 		return KSU_KSUN_VERSION_FULL;
 	case KSU_MANAGER_BKSU:
 		return KSU_BKSU_VERSION_FULL;
+	case KSU_MANAGER_KAZESU:
+		return KSU_KAZESU_VERSION_FULL;
 	case KSU_MANAGER_FINASU:
 		return KSU_FINASU_VERSION_FULL;
+	case KSU_MANAGER_SUKISU:
+		return KSU_SUKISU_VERSION_FULL;
 	case KSU_MANAGER_XXSU:
 	default:
 		return KSU_VERSION_FULL;
