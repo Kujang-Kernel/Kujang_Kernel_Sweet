@@ -268,6 +268,25 @@ typedef typeof(nullptr) nullptr_t;
 #endif
 
 /**
+ * __overloaded
+ * - not a thing, just communicates intent, for annotation purposes
+ */
+#define __overloaded
+
+/**
+ * __overloadable
+ * now this is an actual thing, however, Clang only.
+ * this enables Cpp-like fn overloading (same fn names, compiler resolved)
+ * so you also get Cpp symbol mangling, c++filt is your friend.
+ * no gcc equivalent.
+ */
+#if defined(__clang__)
+#define __overloadable	__attribute__((overlodable))
+#else
+#define __overloadable
+#endif
+
+/**
  * static_assert is C23
  * this has an alternative available on C11 capable compilers.
  * ref: https://elixir.bootlin.com/linux/v5.1/source/include/linux/build_bug.h
@@ -487,29 +506,22 @@ static inline void kfree_byref(void *buf) { kfree(*(void **)buf); }
  *
  */
 #if defined(CONFIG_KSU_NOPRINTK) && !defined(CONFIG_KSU_DEBUG)
-#undef pr_emerg
-#define pr_emerg(fmt, ...)	do { } while (0)
-#undef pr_alert
-#define pr_alert(fmt, ...)	do { } while (0)
-#undef pr_crit
-#define pr_crit(fmt, ...)	do { } while (0)
-#undef pr_err
-#define pr_err(fmt, ...)	do { } while (0)
-#undef pr_warn
-#define pr_warn(fmt, ...)	do { } while (0)
-#undef pr_notice
-#define pr_notice(fmt, ...)	do { } while (0)
-#undef pr_info
-#define pr_info(fmt, ...)	do { } while (0)
-#undef pr_debug
-#define pr_debug(fmt, ...)	do { } while (0)
-#undef pr_devel
-#define pr_devel(fmt, ...)	do { } while (0)
-#undef printk
-#define printk(fmt, ...)	do { } while (0)
+#define pr_emerg(...)	do { } while (0)
+#define pr_alert(...)	do { } while (0)
+#define pr_crit(f...)	do { } while (0)
+#define pr_err(...)	do { } while (0)
+#define pr_warn(...)	do { } while (0)
+#define pr_notice(...)	do { } while (0)
+#define pr_info(...)	do { } while (0)
+#define pr_debug(...)	do { } while (0)
+#define pr_devel(...)	do { } while (0)
+#define printk(...)	do { } while (0)
 #endif // CONFIG_KSU_NOPRINTK && !CONFIG_KSU_DEBUG
 
 // no ratelimit
+#ifdef pr_warn_ratelimited
+#undef pr_warn_ratelimited
+#endif
 #define pr_warn_ratelimited pr_warn
 
 /**

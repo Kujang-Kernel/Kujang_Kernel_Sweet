@@ -118,7 +118,7 @@ static int do_report_event(void __user *arg)
 			pr_info("boot_complete triggered\n");
 			on_boot_completed();
 #ifdef CONFIG_KSU_SUSFS
-        	susfs_start_sdcard_monitor_fn();
+			susfs_start_sdcard_monitor_fn();
 #endif // #ifdef CONFIG_KSU_SUSFS
 		}
 		break;
@@ -524,11 +524,14 @@ static int ksu_copy_to_user(void __user *arg, const void *cmd,
 
 static const char *ksu_hook_type(void)
 {
+	// Keep the same hook label as the other managers.
+	if (ksu_get_manager_type() == KSU_MANAGER_SUKISU)
+		return "Manipulated";
 #ifdef CONFIG_KSU_KPROBES_KSUD
 	return "Kprobes";
 #elif defined(CONFIG_KSU_TAMPER_SYSCALL_TABLE) || \
       defined(CONFIG_KSU_HACK_ARM64_BRANCH_LINK)
-	return "Net.Reaper";
+	return "Manipulated";
 #else
 	return "Manual";
 #endif

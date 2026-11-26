@@ -68,7 +68,7 @@ static __always_inline void ksu_handle_setresuid_cred(struct cred *new, const st
 	if (unlikely(!!old_uid))
 		return;
 #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
-    // Check if spawned process is isolated service first, and force to do umount if so  
+    // Check if spawned process is isolated service first, and force to do umount if so
     if (is_zygote_isolated_service_uid(new_uid)) {
         goto do_umount;
     }
