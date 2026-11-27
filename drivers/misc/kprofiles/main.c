@@ -30,6 +30,7 @@
 #endif
 
 #include <linux/delay.h>
+#include <linux/init.h>
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #ifdef CONFIG_AUTO_KPROFILES_MSM_DRM
@@ -94,6 +95,9 @@ static __always_inline void kp_trigger_mode_change_event(void);
 #ifdef CONFIG_CPU_FREQ
 int kp_governor_register(void);
 void kp_governor_unregister(void);
+#ifdef CONFIG_CPU_FREQ_GOV_VORPAL
+extern void vorpal_set_gaming_mode(unsigned int val);
+#endif
 #endif
 
 /**
@@ -403,10 +407,19 @@ static void kp_switch_governors(unsigned int mode)
 	if (mode >= ARRAY_SIZE(kp_governor_map))
 		return;
 
+#ifdef CONFIG_CPU_FREQ_GOV_VORPAL
 	/*
-	 * KProfiles disabled: leave the governor alone. The ROM's default
-	 * (e.g. reflex, schedutil, ...) is whatever the device tree or init
-	 * script sets at boot.
+	 * Vorpal's gaming band is a separate switch from the governor name.
+	 * Drive it from KProfiles so the QS tile alone is enough: Performance
+	 * enables the floors/warmup, every other mode releases them.
+	 */
+	vorpal_set_gaming_mode(mode == 3 ? 1 : 0);
+#endif
+
+	/*
+	 * Disabled/Battery/Balanced: leave the governor alone. The ROM's
+	 * default (e.g. reflex, schedutil, ...) is whatever the device tree
+	 * or init script sets at boot.
 	 */
 	gov = kp_governor_map[mode];
 	if (!gov)
@@ -520,6 +533,20 @@ static int __init kp_init(void)
 	return ret;
 }
 module_init(kp_init);
+
+#ifdef CONFIG_CPU_FREQ
+/*
+ * The notifier only fires on transitions. Apply the mode that is already
+ * selected at boot (or restored by init) once cpufreq and the governors
+ * are ready, so a persisted Performance mode still gets Vorpal + gaming.
+ */
+static int __init kp_apply_initial_governor(void)
+{
+	kp_switch_governors(kp_active_mode());
+	return 0;
+}
+late_initcall(kp_apply_initial_governor);
+#endif
 
 static void __exit kp_exit(void)
 {
