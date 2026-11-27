@@ -1227,6 +1227,45 @@ static ssize_t gaming_mode_show(struct gov_attr_set *attr_set, char *buf)
 {
 	return sprintf(buf, "%u\n", rfx_gaming_enabled());
 }
+/* In-kernel entry point: keep Vorpal's gaming band in lockstep with
+ * KProfiles Performance mode. Mirrors the sysfs store without parsing. */
+void vorpal_set_gaming_mode(unsigned int val)
+{
+	struct rfx_policy *p;
+	unsigned long flags, pflags;
+	u64 now;
+
+	if (val > 1)
+		return;
+
+	atomic_set(&rfx_gaming, val);
+
+	if (!val) {
+		rfx_reset_all_policies();
+		/* Drop the 100ms gaming thermal poll back to idle rate. */
+		mod_delayed_work(system_power_efficient_wq, &rfx_thermal_work,
+				 msecs_to_jiffies(RFX_THERMAL_POLL_IDLE_MS));
+		return;
+	}
+
+	now = sched_clock();
+	spin_lock_irqsave(&rfx_policy_list_lock, flags);
+	list_for_each_entry(p, &rfx_policy_list, gov_node) {
+		raw_spin_lock_irqsave(&p->update_lock, pflags);
+		rfx_reset_policy_locked(p);
+		/* Warmup floor lift covers process spawn / asset load. */
+		p->gaming_warmup_end_ns = now + RFX_GAMING_WARMUP_NS;
+		p->gaming_warmup_start_ns = now;
+		raw_spin_unlock_irqrestore(&p->update_lock, pflags);
+	}
+	spin_unlock_irqrestore(&rfx_policy_list_lock, flags);
+
+	/* Sample temperature sooner once gaming begins. */
+	mod_delayed_work(system_power_efficient_wq, &rfx_thermal_work,
+			 msecs_to_jiffies(RFX_THERMAL_POLL_GAMING_MS));
+}
+EXPORT_SYMBOL(vorpal_set_gaming_mode);
+
 static ssize_t gaming_mode_store(struct gov_attr_set *attr_set,
 				 const char *buf, size_t count)
 {
@@ -1237,33 +1276,7 @@ static ssize_t gaming_mode_store(struct gov_attr_set *attr_set,
 	if (val > 1)
 		return -EINVAL;
 
-	atomic_set(&rfx_gaming, val);
-
-	if (!val) {
-		rfx_reset_all_policies();
-		/* Drop the 100ms gaming thermal poll back to idle rate. */
-		mod_delayed_work(system_power_efficient_wq, &rfx_thermal_work,
-				 msecs_to_jiffies(RFX_THERMAL_POLL_IDLE_MS));
-	} else {
-		struct rfx_policy *p;
-		unsigned long flags, pflags;
-		u64 now = sched_clock();
-
-		spin_lock_irqsave(&rfx_policy_list_lock, flags);
-		list_for_each_entry(p, &rfx_policy_list, gov_node) {
-			raw_spin_lock_irqsave(&p->update_lock, pflags);
-			rfx_reset_policy_locked(p);
-			/* Warmup floor lift covers process spawn / asset load. */
-			p->gaming_warmup_end_ns = now + RFX_GAMING_WARMUP_NS;
-			p->gaming_warmup_start_ns = now;
-			raw_spin_unlock_irqrestore(&p->update_lock, pflags);
-		}
-		spin_unlock_irqrestore(&rfx_policy_list_lock, flags);
-
-		/* Sample temperature sooner once gaming begins. */
-		mod_delayed_work(system_power_efficient_wq, &rfx_thermal_work,
-				 msecs_to_jiffies(RFX_THERMAL_POLL_GAMING_MS));
-	}
+	vorpal_set_gaming_mode(val);
 	return count;
 }
 static struct governor_attr gaming_mode = __ATTR_RW(gaming_mode);
