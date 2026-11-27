@@ -23,12 +23,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           MESSAGE: ${{ inputs.message }}
         run: |
-          set -e
           printf '%s' "$MESSAGE" > /tmp/changelog.txt
           RESP="$(curl -sS -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${CHAT}" \
             --data-urlencode "text@/tmp/changelog.txt" \
             --data-urlencode "disable_web_page_preview=true")"
+          echo "changelog: $RESP"
           echo "$RESP" | grep -q '"ok":true'
 
           for pair in \
@@ -36,14 +36,20 @@ jobs:
             "15198881970|Kujang-X_Non-KSU_27112026-1940.zip"; do
             ID="${pair%%|*}"
             NAME="${pair##*|}"
-            curl -sSL -H "Authorization: Bearer ${GH_TOKEN}" \
+            CODE="$(curl -sSL -o /tmp/a.zip -w '%{http_code}' \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
               -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${ID}/zip" -o /tmp/a.zip
-            unzip -p /tmp/a.zip > "/tmp/${NAME}"
+              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${ID}/zip")"
+            echo "artifact ${ID}: http=${CODE} size=$(stat -c%s /tmp/a.zip)"
+            rm -rf /tmp/unz && mkdir -p /tmp/unz
+            unzip -o /tmp/a.zip -d /tmp/unz
+            INNER="$(find /tmp/unz -type f | head -1)"
+            cp "$INNER" /tmp/kernel.zip
+            echo "kernel ${NAME}: size=$(stat -c%s /tmp/kernel.zip)"
             RESP="$(curl -sS -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
               -F "chat_id=${CHAT}" \
-              -F "document=@/tmp/${NAME};filename=${NAME}" \
+              -F "document=@/tmp/kernel.zip;filename=${NAME}" \
               -F "caption=${NAME}")"
-            echo "${NAME}: ${RESP}"
+            echo "upload ${NAME}: $RESP"
             echo "$RESP" | grep -q '"ok":true'
           done
