@@ -1,0 +1,27 @@
+name: Telegram Changelog
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: Pesan changelog yang dikirim
+        required: true
+        type: string
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kirim ke Telegram
+        env:
+          TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MESSAGE: ${{ inputs.message }}
+        run: |
+          printf '%s' "$MESSAGE" > /tmp/message.txt
+          RESP="$(curl -sS -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${CHAT}" \
+            --data-urlencode "text@/tmp/message.txt" \
+            --data-urlencode "disable_web_page_preview=true")"
+          echo "$RESP"
+          echo "$RESP" | grep -q '"ok":true' || exit 1
