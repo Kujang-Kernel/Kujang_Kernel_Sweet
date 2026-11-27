@@ -2,11 +2,6 @@ name: Telegram Upload Kujang X
 
 on:
   workflow_dispatch:
-    inputs:
-      message:
-        description: Changelog Kujang X
-        required: true
-        type: string
 
 permissions:
   contents: read
@@ -16,40 +11,39 @@ jobs:
   upload:
     runs-on: ubuntu-latest
     steps:
-      - name: Kirim changelog + ZIP ke Telegram
+      - name: Upload ZIP ke Telegram
         env:
           TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
           GH_TOKEN: ${{ github.token }}
-          MESSAGE: ${{ inputs.message }}
         run: |
-          printf '%s' "$MESSAGE" > /tmp/changelog.txt
-          RESP="$(curl -sS -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
-            --data-urlencode "chat_id=${CHAT}" \
-            --data-urlencode "text@/tmp/changelog.txt" \
-            --data-urlencode "disable_web_page_preview=true")"
-          echo "changelog: $RESP"
-          echo "$RESP" | grep -q '"ok":true'
-
+          set -e
           for pair in \
             "15199371828|Kujang-X_KSU-AOSP_27112026-1940.zip" \
             "15198881970|Kujang-X_Non-KSU_27112026-1940.zip"; do
             ID="${pair%%|*}"
             NAME="${pair##*|}"
-            CODE="$(curl -sSL -o /tmp/a.zip -w '%{http_code}' \
+            curl -sSL -o /tmp/a.zip \
               -H "Authorization: Bearer ${GH_TOKEN}" \
               -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${ID}/zip")"
-            echo "artifact ${ID}: http=${CODE} size=$(stat -c%s /tmp/a.zip)"
+              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${ID}/zip"
             rm -rf /tmp/unz && mkdir -p /tmp/unz
             unzip -o /tmp/a.zip -d /tmp/unz
             INNER="$(find /tmp/unz -type f | head -1)"
             cp "$INNER" /tmp/kernel.zip
-            echo "kernel ${NAME}: size=$(stat -c%s /tmp/kernel.zip)"
-            RESP="$(curl -sS -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
-              -F "chat_id=${CHAT}" \
-              -F "document=@/tmp/kernel.zip;filename=${NAME}" \
-              -F "caption=${NAME}")"
-            echo "upload ${NAME}: $RESP"
-            echo "$RESP" | grep -q '"ok":true'
+            echo "upload ${NAME}: size=$(stat -c%s /tmp/kernel.zip)"
+            NAME="$NAME" python3 - <<'PY'
+          import os, requests
+          name = os.environ["NAME"]
+          with open("/tmp/kernel.zip", "rb") as f:
+              r = requests.post(
+                  "https://api.telegram.org/bot" + os.environ["TOKEN"] + "/sendDocument",
+                  data={"chat_id": os.environ["CHAT"], "caption": name},
+                  files={"document": (name, f, "application/zip")},
+                  timeout=120,
+              )
+          print(name, r.text[:200])
+          if not r.json().get("ok"):
+              raise SystemExit(1)
+          PY
           done
