@@ -1,0 +1,49 @@
+name: Telegram Upload Kujang X
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: Changelog Kujang X
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kirim changelog + ZIP ke Telegram
+        env:
+          TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GH_TOKEN: ${{ github.token }}
+          MESSAGE: ${{ inputs.message }}
+        run: |
+          set -e
+          printf '%s' "$MESSAGE" > /tmp/changelog.txt
+          RESP="$(curl -sS -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${CHAT}" \
+            --data-urlencode "text@/tmp/changelog.txt" \
+            --data-urlencode "disable_web_page_preview=true")"
+          echo "$RESP" | grep -q '"ok":true'
+
+          for pair in \
+            "15199371828|Kujang-X_KSU-AOSP_27112026-1940.zip" \
+            "15198881970|Kujang-X_Non-KSU_27112026-1940.zip"; do
+            ID="${pair%%|*}"
+            NAME="${pair##*|}"
+            curl -sSL -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${ID}/zip" -o /tmp/a.zip
+            unzip -p /tmp/a.zip > "/tmp/${NAME}"
+            RESP="$(curl -sS -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
+              -F "chat_id=${CHAT}" \
+              -F "document=@/tmp/${NAME};filename=${NAME}" \
+              -F "caption=${NAME}")"
+            echo "${NAME}: ${RESP}"
+            echo "$RESP" | grep -q '"ok":true'
+          done
