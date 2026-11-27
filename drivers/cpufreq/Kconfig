@@ -188,6 +188,14 @@ config CPU_FREQ_GOV_ONDEMAND
 
 	  If in doubt, say N.
 
+config CPU_FREQ_GOV_MOONBEAM
+	tristate "'moonbeam' cpufreq policy governor"
+	depends on CPU_FREQ && SMP
+	select CPU_FREQ_GOV_COMMON
+	help
+	  'moonbeam' - dynamic cpufreq policy governor based on ondemand,
+	  with periodic sampling and powersave_bias support.
+
 config CPU_FREQ_GOV_CONSERVATIVE
 	tristate "'conservative' cpufreq governor"
 	depends on CPU_FREQ
